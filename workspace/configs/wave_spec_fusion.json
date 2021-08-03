@@ -1,0 +1,181 @@
+{
+    "n_gpu": 1,
+    "root_dir": "./",
+    "name": "dcase_task1b_1s",
+    
+    "wandb": {
+        "project": "dcase_task1b",
+        "notes": "DCASE Task1B fusion model.",
+        "entity": "wandb"
+    },
+
+    "datasets": {
+        "train": {
+            "data": {
+                "module": ".1s_dataset",
+                "type": "MultiModalAugmentationDataset",
+                "kwargs": {
+                    "data_dir": "data/tau_audiovisual_2021/train_1sec.csv",
+                    "label_list": ["airport",
+                          "shopping_mall",
+                          "metro_station",
+                          "street_pedestrian",
+                          "public_square",
+                          "street_traffic",
+                          "tram",
+                          "bus",
+                          "metro",
+                          "park"],
+                    "wave_cache_dir": "data/tau_audiovisual_2021/waveform_cache/",
+                    "spec_cache_dir": "data/tau_audiovisual_2021/spectrogram_2048window_256hop_cache/",
+                    "w_shift": true,
+                    "s_shift": true
+                }
+            }
+        },
+        "valid": {
+            "data": {
+                "module": ".1s_dataset",
+                "type": "MultiModalAugmentationDataset",
+                "kwargs": {
+                    "data_dir": "data/tau_audiovisual_2021/val_1sec.csv",
+                    "label_list": ["airport",
+                          "shopping_mall",
+                          "metro_station",
+                          "street_pedestrian",
+                          "public_square",
+                          "street_traffic",
+                          "tram",
+                          "bus",
+                          "metro",
+                          "park"],
+                    "wave_cache_dir": "data/tau_audiovisual_2021/waveform_cache/",
+                    "spec_cache_dir": "data/tau_audiovisual_2021/spectrogram_2048window_256hop_cache/"
+                }
+            }
+        },
+        "test": {
+            "data": {
+                "module": ".1s_dataset",
+                "type": "MultiModalAugmentationDataset",
+                "kwargs": {
+                    "data_dir": "data/tau_audiovisual_2021/val_1sec.csv",
+                    "label_list": ["airport",
+                          "shopping_mall",
+                          "metro_station",
+                          "street_pedestrian",
+                          "public_square",
+                          "street_traffic",
+                          "tram",
+                          "bus",
+                          "metro",
+                          "park"],
+                    "wave_cache_dir": "data/tau_audiovisual_2021/waveform_cache/",
+                    "spec_cache_dir": "data/tau_audiovisual_2021/spectrogram_2048window_256hop_cache/"
+                }
+            }
+        }
+    },
+    "data_loaders": {
+        "train": {
+            "data": {
+                "module": ".1s_dataset",
+                "type": "BaseDataLoader",
+                "kwargs": {
+                    "validation_split": 0.0,
+                    "DataLoader_kwargs": {
+                        "batch_size": 128,
+                        "shuffle": true,
+                        "num_workers": 4
+                    }
+                }
+            }
+        },
+        "valid": {
+            "data": {
+                "module": ".1s_dataset",
+                "type": "BaseDataLoader",
+                "kwargs": {
+                    "validation_split": 0.0,
+                    "DataLoader_kwargs": {
+                        "batch_size": 128,
+                        "shuffle": false,
+                        "num_workers": 4
+                    }
+                }
+            }
+        },
+        "test": {
+            "data": {
+                "module": ".1s_dataset",
+                "type": "BaseDataLoader",
+                "kwargs": {
+                    "validation_split": 0.0,
+                    "DataLoader_kwargs": {
+                        "batch_size": 128,
+                        "shuffle": false,
+                        "num_workers": 4
+                    }
+                }
+            }
+        }
+    },
+    "models": {
+        "model": {
+            "module": ".model",
+            "type": "SmallMultiModalFusionClassifier",
+            "kwargs": {
+                "input_length": 480000,
+                "n_bins": 128,
+                "n_frames": 188,
+                "num_classes": 10,
+                "fusion_method": "sum",
+                "parameterization": "sinc",
+                "non_linearity": "LeakyReLU"
+            }
+        }
+    },
+    "losses": {
+        "loss": {
+            "type": "CrossEntropyLoss"
+        }
+    },
+    "metrics": {
+        "per_iteration": [],
+        "per_epoch": ["accuracy"]
+    },
+    "optimizers": {
+        "model": {
+            "type": "SGD",
+            "kwargs": {
+                "lr": 0.0001,
+                "momentum": 0.9
+            }
+        }
+    },
+    "lr_schedulers": {
+    },
+    "trainer": {
+        "module": ".trainer_mixup",
+        "type": "DCASETask1BTrainerWithMixup",
+        "kwargs": {
+            "finetune": false,
+            "epochs": 50,
+            "len_epoch": null,
+            
+            "find_lr": true,
+            
+            "mixup": true,
+            "mixup_p": 0.5,
+
+            "save_period": 50,
+            "save_the_best": true,
+            "verbosity": 2,
+
+            "monitor": "min val_loss",
+            "early_stop": 0,
+
+            "tensorboard": false
+        }
+    }
+}
