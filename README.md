@@ -42,3 +42,24 @@ To process the dataset, run these lines in the `workspace/` directory:
 * `chmod +x scripts/unzip_dataset.sh`
 * `./scripts/download_dataset.sh`
 * `./scripts/unzip_dataset.sh`
+
+Next, inside of the container, run the following script:
+
+* `python3 scripts/process_dcase_1s.py`
+
+## Training the Fusion Model
+
+Inside the container, run the following command in the root directory of the container:
+
+* `python3 train.py -c configs/wave_spec_fusion.json -d <0,1,2,3, etc. GPU #> --run_id 'Fusion Model'`
+
+This will train the model using the configuration defined in `configs/wave_spec_fusion.json`. We utilize Weights and Biases logging, but this is optional.
+If you wish to use Weights and Biases, you can login using your personal api key and runs will be logged.
+
+## Code References
+
+In this Codebase, we utilize code from the following sources:
+
+* [https://github.com/m-koichi/ConformerSED](https://github.com/m-koichi/ConformerSED)
+* [https://github.com/mravanelli/SincNet](https://github.com/mravanelli/SincNet)
+* [https://github.com/MILVLG/openvqa](https://github.com/MILVLG/openvqa)
