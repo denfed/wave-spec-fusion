@@ -1,0 +1,7 @@
+python3
+python3-pip
+libsndfile1-dev
+libsm6
+libxext6
+libxrender-dev
+ffmpeg

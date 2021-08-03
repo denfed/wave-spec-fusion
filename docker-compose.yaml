@@ -1,0 +1,24 @@
+version: '2.3'
+
+services:
+  dcase_2021:
+    runtime: nvidia
+    image: dcase_2021
+    ipc: host
+    build:
+      context: .
+      args:
+        - UID
+        - GID
+        - USER_PASSWORD
+    command: bash -c "jupyter lab --ip=0.0.0.0 --NotebookApp.token='' --NotebookApp.password='' --allow-root"
+    ports:
+      - "9999:8888"
+      - "6066:6066"
+    volumes:
+      - ./workspace/:/home/src
+      - /mnt/ssd/data/:/mnt/ssd/data
+networks:
+  default:
+    external:
+      name: glados-docker
