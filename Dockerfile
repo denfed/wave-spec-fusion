@@ -30,7 +30,7 @@ RUN pip3 install --upgrade pip==21.1
 RUN pip3 install --upgrade wandb
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
-# RUN wandb login --host=http://172.20.10.25:8080 local-5ed047f6444dbff04bf0737f85516a73125b7b69
+# RUN wandb login --host=<YOUR HOST> <YOUR API KEY>
 
 # Cache pytorch so it doesn't re-download on requirements change
 RUN pip3 install torch==1.8.1
